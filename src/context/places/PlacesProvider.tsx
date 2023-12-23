@@ -28,7 +28,7 @@ export const PlacesProvider = ({ children }: Props) => {
 
 	useEffect(() => {
 		getUserLocation().then((lngLat) => {
-			console.log(lngLat)
+			console.log(lngLat);
 			dispatch({ type: "setUserLocation", payload: lngLat });
 		});
 	}, []);
@@ -69,13 +69,13 @@ export const PlacesProvider = ({ children }: Props) => {
 			params: {
 				q: query,
 				viewbox:
-					(xLocation - 1).toString() +
+					(xLocation - 3).toString() +
 					"," +
-					(xLocation + 1).toString() +
+					(xLocation + 3).toString() +
 					"," +
-					(yLocation - 1).toString() +
+					(yLocation - 3).toString() +
 					"," +
-					(yLocation + 1).toString(),
+					(yLocation + 3).toString(),
 				bounded: 1,
 			},
 		});

@@ -6,7 +6,8 @@ import MapLibreGlDirections from "@maplibre/maplibre-gl-directions";
 
 export const SearchResults = () => {
 	const { places, isLoadingPlaces, userLocation } = useContext(PlacesContext);
-	const { map, getRoutesBetweenPoints, directionsObject } = useContext(MapContext);
+	const { map, getRoutesBetweenPoints, directionsObject } =
+		useContext(MapContext);
 
 	const [activeId, setActiveId] = useState("");
 
@@ -23,13 +24,13 @@ export const SearchResults = () => {
 	const getRoute = (place: Feature) => {
 		if (!userLocation && map) return;
 
+		directionsObject?.removeWaypoint(0);
+		directionsObject?.clear();
+
 		const [lng, lat] = place.geometry.coordinates;
 
-		
-		directionsObject!.setWaypoints([
-			userLocation!,
-			[lng, lat],
-		]);
+		console.log(`userLocation: ${userLocation} - destino: ${[lat, lng]}`);
+		directionsObject?.setWaypoints([userLocation!, [lng, lat]]);
 	};
 
 	if (isLoadingPlaces) {
