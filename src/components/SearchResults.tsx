@@ -27,10 +27,11 @@ export const SearchResults = () => {
 		directionsObject?.removeWaypoint(0);
 		directionsObject?.clear();
 
+		
 		const [lng, lat] = place.geometry.coordinates;
 
 		console.log(`userLocation: ${userLocation} - destino: ${[lat, lng]}`);
-		directionsObject?.setWaypoints([userLocation!, [lng, lat]]);
+		directionsObject?.setWaypoints([[userLocation![1], userLocation![0]], [lng, lat]]);
 	};
 
 	if (isLoadingPlaces) {
