@@ -27,25 +27,59 @@ export const PlacesProvider = ({ children }: Props) => {
 	const [state, dispatch] = useReducer(placesReducer, INITIAL_STATE);
 
 	useEffect(() => {
-		getUserLocation().then((lngLat) =>
-			dispatch({ type: "setUserLocation", payload: lngLat })
-		);
+		getUserLocation().then((lngLat) => {
+			console.log(lngLat)
+			dispatch({ type: "setUserLocation", payload: lngLat });
+		});
 	}, []);
 
 	const searchPlacesByTerm = async (query: string): Promise<Feature[]> => {
-		if (query.length === 0) return []; //Limpiar state
+		if (query.length === 0) {
+			dispatch({ type: "setPlaces", payload: [] });
+			return [];
+		}
 		if (!state.userLocation) throw new Error("No hay ubicacion disponible");
 
 		dispatch({ type: "setLoadingPlaces" }); //Iniciamos la carga
 
-		console.log(state.userLocation.reverse().join(","))
-		
+		console.log(state.userLocation.reverse().join(","));
+		const xLocation = state.userLocation[0];
+		const yLocation = state.userLocation[1];
+
+		/* const params = new URLSearchParams();
+		params.append("x1", (xLocation - 1).toString());
+		params.append("x2", (xLocation + 1).toString());
+		params.append("y1", (yLocation - 1).toString());
+		params.append("y2", (yLocation + 1).toString()); */
+		console.log(
+			"x1: " +
+				(xLocation - 0.5).toString() +
+				"," +
+				"x2: " +
+				(xLocation + 0.5).toString() +
+				"," +
+				"y1: " +
+				(yLocation - 0.5).toString() +
+				"," +
+				"y2: " +
+				(yLocation + 0.5).toString()
+		);
+
 		const resp = await searchApi.get<PlacesResponse>(`/search`, {
 			params: {
-				q: query + ' ' + state.userLocation.reverse().join(","),
+				q: query,
+				viewbox:
+					(xLocation - 1).toString() +
+					"," +
+					(xLocation + 1).toString() +
+					"," +
+					(yLocation - 1).toString() +
+					"," +
+					(yLocation + 1).toString(),
+				bounded: 1,
 			},
 		});
-		console.log(resp)
+		console.log(resp);
 
 		dispatch({ type: "setPlaces", payload: resp.data.features });
 

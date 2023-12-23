@@ -5,12 +5,13 @@ import "@maptiler/sdk/dist/maptiler-sdk.css";
 import * as maptilersdk from "@maptiler/sdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import MapLibreGL from "maplibre-gl";
+import MapLibreGlDirections from "@maplibre/maplibre-gl-directions";
 
 
 
 export const MapView = () => {
 	const { userLocation, isLoading } = useContext(PlacesContext);
-	const { setMap, isMapReady, map } = useContext(MapContext)
+	const { setMap, isMapReady, map, setMapDirections } = useContext(MapContext)
 	const mapDiv = useRef<HTMLDivElement>(null);
 
 	maptilersdk.config.apiKey = 'YAsqKYCi3MuCk0PDbU0Q';
@@ -23,7 +24,15 @@ export const MapView = () => {
 				center: userLocation, // starting position [lng, lat]
 				zoom: 14 // starting zoom
 			});
+
+			map.on("load", () => {
+				// Create an instance of the default class
+				const directions = new MapLibreGlDirections(map);
+				setMapDirections(directions);
+			});
+			
 			setMap(map);
+
 		}
 	}, [isLoading]);
 
